@@ -1,12 +1,13 @@
 package br.unigoias.locacoes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.unigoias.locacoes.model.LocacaoImovel;
+import br.unigoias.locacoes.service.ImpostoBrasilService;
 import br.unigoias.locacoes.service.LocacaoImovelService;
 
 @RestController
@@ -18,8 +19,8 @@ public class LocacaoImovelController {
 	
 
 	@PutMapping("/{locacaoId}/cobrancas")
-	public LocacaoImovel processarCobranca(@PathVariable Long locacaoId) {
-		return null;
+	public ResponseEntity<?> processarCobranca(@PathVariable Long locacaoId) {
+		return locacaoService.processarCobranca(locacaoId, new ImpostoBrasilService());
 	}
 	
 

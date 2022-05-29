@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class LocacaoImovel implements Serializable{
@@ -19,6 +20,11 @@ public class LocacaoImovel implements Serializable{
 	
 	private Integer quantidadeDiarias;
 	
+	private Long valorPorDiaria;
+	
+	@OneToOne(mappedBy = "locacaoImovel", optional = true)
+	private Cobranca cobranca;
+	
 	@ManyToOne
 	@JoinColumn(name = "imovel_id")
 	private Imovel imovel;
@@ -26,10 +32,11 @@ public class LocacaoImovel implements Serializable{
 	public LocacaoImovel() {
 	}
 
-	public LocacaoImovel(Long id, Integer quantidadeDiarias, Imovel imovel) {
+	public LocacaoImovel(Long id, Integer quantidadeDiarias, Long valorPorDiaria, Imovel imovel) {
 		this.id = id;
 		this.quantidadeDiarias = quantidadeDiarias;
 		this.imovel = imovel;
+		this.valorPorDiaria = valorPorDiaria;
 	}
 
 	public Long getId() {
@@ -48,6 +55,14 @@ public class LocacaoImovel implements Serializable{
 		this.quantidadeDiarias = quantidadeDiarias;
 	}
 
+	public Long getValorPorDiaria() {
+		return valorPorDiaria;
+	}
+	
+	public void setValorPorDiaria(Long valorPorDiaria) {
+		this.valorPorDiaria = valorPorDiaria;
+	}
+	
 	public Imovel getImovel() {
 		return imovel;
 	}
@@ -56,6 +71,13 @@ public class LocacaoImovel implements Serializable{
 		this.imovel = imovel;
 	}
 	
+	public Cobranca getCobranca() {
+		return cobranca;
+	}
+	
+	public void setCobranca(Cobranca cobranca) {
+		this.cobranca = cobranca;
+	}
 	
 	
 }
