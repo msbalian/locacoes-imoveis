@@ -1,7 +1,5 @@
 package br.unigoias.locacoes.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,8 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class LocacaoImovel implements Serializable{
-	private static final long serialVersionUID = 1L;
+public class LocacaoImovel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +17,7 @@ public class LocacaoImovel implements Serializable{
 	
 	private Integer quantidadeDiarias;
 	
-	private Long valorPorDiaria;
+	private Double valorPorDiaria;
 	
 	@OneToOne(mappedBy = "locacaoImovel", optional = true)
 	private Cobranca cobranca;
@@ -32,7 +29,7 @@ public class LocacaoImovel implements Serializable{
 	public LocacaoImovel() {
 	}
 
-	public LocacaoImovel(Long id, Integer quantidadeDiarias, Long valorPorDiaria, Imovel imovel) {
+	public LocacaoImovel(Long id, Integer quantidadeDiarias, Double valorPorDiaria, Imovel imovel) {
 		this.id = id;
 		this.quantidadeDiarias = quantidadeDiarias;
 		this.imovel = imovel;
@@ -55,11 +52,11 @@ public class LocacaoImovel implements Serializable{
 		this.quantidadeDiarias = quantidadeDiarias;
 	}
 
-	public Long getValorPorDiaria() {
+	public Double getValorPorDiaria() {
 		return valorPorDiaria;
 	}
 	
-	public void setValorPorDiaria(Long valorPorDiaria) {
+	public void setValorPorDiaria(Double valorPorDiaria) {
 		this.valorPorDiaria = valorPorDiaria;
 	}
 	
@@ -78,6 +75,6 @@ public class LocacaoImovel implements Serializable{
 	public void setCobranca(Cobranca cobranca) {
 		this.cobranca = cobranca;
 	}
-	
+
 	
 }

@@ -2,6 +2,7 @@ package br.unigoias.locacoes.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import br.unigoias.locacoes.model.Cobranca;
 import br.unigoias.locacoes.model.Imovel;
 import br.unigoias.locacoes.model.LocacaoImovel;
+import br.unigoias.locacoes.model.dto.CobrancaDTO;
+import br.unigoias.locacoes.model.dto.LocacaoImovelDTO;
 import br.unigoias.locacoes.repository.CobrancaRepository;
 import br.unigoias.locacoes.repository.ImovelRepository;
 import br.unigoias.locacoes.repository.LocacaoImovelRepository;
@@ -32,14 +35,17 @@ public class LocacaoImovelService {
 		return locacaoRepository.findById(id).orElse(null);
 	}
 
-	public LocacaoImovel save(Long imovelId, LocacaoImovel locacao) {
+	public LocacaoImovelDTO save(Long imovelId, LocacaoImovelDTO locacaoDTO) {
 
 		Optional<Imovel> imovel = imovelRepository.findById(imovelId);
 
 		if (imovel.isPresent()) {
-
+			LocacaoImovel locacao = new LocacaoImovel();
 			locacao.setImovel(imovel.get());
-			return locacaoRepository.save(locacao);
+			locacao.setQuantidadeDiarias(locacao.getQuantidadeDiarias());
+			locacao.setValorPorDiaria(locacaoDTO.getValorPorDiaria());
+			locacaoRepository.save(locacao);
+			return new LocacaoImovelDTO(locacao);
 
 		}
 
@@ -47,13 +53,16 @@ public class LocacaoImovelService {
 
 	}
 
-	public List<LocacaoImovel> findByImovelId(Long imovelId) {
+	public List<LocacaoImovelDTO> findByImovelId(Long imovelId) {
 
 		Optional<Imovel> imovel = imovelRepository.findById(imovelId);
 
 		if (imovel.isPresent()) {
 
-			return locacaoRepository.findByImovel(imovel.get());
+			return locacaoRepository.findByImovel(imovel.get())
+					.stream()
+					.map(loc -> new LocacaoImovelDTO(loc))
+					.collect(Collectors.toList());
 
 		}
 
@@ -62,7 +71,7 @@ public class LocacaoImovelService {
 	}
 
 	@Transactional
-	public ResponseEntity<Cobranca> processarCobranca(Long locacaoId, ImpostoService impostoService) {
+	public ResponseEntity<CobrancaDTO> processarCobranca(Long locacaoId, CobrancaDTO cobrancaDTO) {
 		
 		Optional<LocacaoImovel> locacaoOptional = locacaoRepository.findById(locacaoId);
 		
@@ -70,15 +79,35 @@ public class LocacaoImovelService {
 			LocacaoImovel locacao = locacaoOptional.get();
 			int diarias = locacao.getQuantidadeDiarias();
 			double valorPrincipal = locacao.getValorPorDiaria() * diarias;
+			ImpostoService impostoService;
+			switch (cobrancaDTO.getPaisTributacao().toUpperCase()) {
+			case "BRASIL":
+				impostoService = new ImpostoBrasilService();	
+				break;
+
+			case "USA":
+				impostoService = new ImpostoUsaService();
+				break;
+				
+			default:
+				impostoService = new ImpostoBrasilService();
+				break;
+			}
+			
 			double valorImposto = impostoService.calcularImposto(valorPrincipal);
 			Cobranca cobranca = new Cobranca();
 			cobranca.setValorPrincipal(valorPrincipal);
 			cobranca.setValorImposto(valorImposto);
 			cobranca.setValorPagamento(valorPrincipal+valorImposto);
+			cobranca.setLocacaoImovel(locacao);
 			locacao.setCobranca(cobranca);
 			cobrancaRepository.save(cobranca);
 			locacaoRepository.save(locacao);
-			return ResponseEntity.ok(cobranca);
+
+			cobrancaDTO.setValorImposto(cobranca.getValorImposto());
+			cobrancaDTO.setValorPrincipal(cobranca.getValorPrincipal());
+			cobrancaDTO.setValorPagamento(cobranca.getValorPagamento());
+			return ResponseEntity.ok(cobrancaDTO);
 		}
 		
 		return ResponseEntity.notFound().build();

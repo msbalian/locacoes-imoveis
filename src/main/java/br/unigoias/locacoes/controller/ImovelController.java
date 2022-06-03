@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.unigoias.locacoes.model.Imovel;
 import br.unigoias.locacoes.model.LocacaoImovel;
+import br.unigoias.locacoes.model.dto.ImovelDTO;
+import br.unigoias.locacoes.model.dto.LocacaoImovelDTO;
 import br.unigoias.locacoes.service.ImovelService;
 import br.unigoias.locacoes.service.LocacaoImovelService;
 
@@ -29,38 +31,38 @@ public class ImovelController {
 	private LocacaoImovelService locacaoService; 
 	
 	@GetMapping
-	public List<Imovel> findAll() {
+	public List<ImovelDTO> findAll() {
 		return imovelService.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Imovel> findById(@PathVariable Long id) {
+	public ResponseEntity<ImovelDTO> findById(@PathVariable Long id) {
 		return imovelService.findById(id);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Imovel> deleteById(@PathVariable Long id) {
+	public ResponseEntity<ImovelDTO> deleteById(@PathVariable Long id) {
 		return imovelService.deleteById(id);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Imovel> updateById(@PathVariable Long id, @RequestBody Imovel novoImovel) {
+	public ResponseEntity<ImovelDTO> updateById(@PathVariable Long id, @RequestBody Imovel novoImovel) {
 		return imovelService.updateById(id, novoImovel);
 	}
 
 	@PostMapping
-	public Imovel save(@RequestBody Imovel imovel) {
-		return imovelService.save(imovel);
+	public ImovelDTO save(@RequestBody ImovelDTO imovelDTO) {
+		return imovelService.save(imovelDTO);
 	}
 	
 	@GetMapping("/{imovelId}/locacoes")
-	public List<LocacaoImovel> findByImovelId(@PathVariable Long imovelId) {
+	public List<LocacaoImovelDTO> findByImovelId(@PathVariable Long imovelId) {
 		return locacaoService.findByImovelId(imovelId);
 	}
 	
 	@PostMapping("/{imovelId}/locacoes")
-	public LocacaoImovel save(@PathVariable Long imovelId, @RequestBody LocacaoImovel locacaoImovel) {
-		return locacaoService.save(imovelId, locacaoImovel);
+	public LocacaoImovelDTO save(@PathVariable Long imovelId, @RequestBody LocacaoImovelDTO locacaoImovelDTO) {
+		return locacaoService.save(imovelId, locacaoImovelDTO);
 	}	
 		
 }
