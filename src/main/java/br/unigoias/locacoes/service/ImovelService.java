@@ -2,15 +2,16 @@ package br.unigoias.locacoes.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import br.unigoias.locacoes.model.Imovel;
-import br.unigoias.locacoes.model.dto.ImovelDTO;
+import br.unigoias.locacoes.model.LocacaoImovel;
 import br.unigoias.locacoes.repository.ImovelRepository;
+import br.unigoias.locacoes.repository.LocacaoImovelRepository;
 
 @Service
 public class ImovelService {
@@ -18,29 +19,29 @@ public class ImovelService {
 	@Autowired
 	private ImovelRepository imovelRepository;
 	
-	public List<ImovelDTO> findAll() {
+	@Autowired
+	private LocacaoImovelRepository locacaoRepository;
+	
+	public List<Imovel> findAll() {
 		
-		List<Imovel> imoveis = imovelRepository.findAll();
-		return imoveis.stream()
-				.map(imovel -> new ImovelDTO(imovel))
-				.collect(Collectors.toList());
+		return imovelRepository.findAll();
 		
 	}
 	
 	
-	public ResponseEntity<ImovelDTO> findById(Long id) {
+	public ResponseEntity<Imovel> findById(Long id) {
 		
 		Optional<Imovel> imovel = imovelRepository.findById(id);
 		
 		if (imovel.isPresent()) {
-			return ResponseEntity.ok(new ImovelDTO(imovel.get()));
+			return ResponseEntity.ok(imovel.get());
 		}
 		
 		return ResponseEntity.notFound().build();
 		
 	}
 	
-	public ResponseEntity<ImovelDTO> deleteById(Long id) {
+	public ResponseEntity<Imovel> deleteById(Long id) {
 		
 		if (imovelRepository.existsById(id)) {
 			
@@ -53,11 +54,11 @@ public class ImovelService {
 		
 	}
 	
-	public ResponseEntity<ImovelDTO> updateById(Long id, Imovel novoImovel) {
+	public ResponseEntity<Imovel> updateById(Long id, Imovel novoImovel) {
 		
 		if (imovelRepository.existsById(id)) {
 			novoImovel.setId(id);
-			return ResponseEntity.ok(new ImovelDTO(imovelRepository.save(novoImovel)));
+			return ResponseEntity.ok(imovelRepository.save(novoImovel));
 		}
 		
 		return ResponseEntity.notFound().build();
@@ -66,10 +67,43 @@ public class ImovelService {
 	
 	
 	
-	public ImovelDTO save(ImovelDTO imovelDTO) {
-		Imovel imovel = new Imovel(imovelDTO.getId(), imovelDTO.getDescricao());
-		imovelRepository.save(imovel);
-		return new ImovelDTO(imovel);
+	public ResponseEntity<Imovel> save(Imovel imovel) {
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(imovelRepository.save(imovel));
+
 	}
+	
+	public ResponseEntity<LocacaoImovel> saveByImovelId(Long imovelId, LocacaoImovel locacaoImovel) {
+		
+		Optional<Imovel> imovel = imovelRepository.findById(imovelId);
+				
+		if (imovel.isPresent()) {
+			
+			locacaoImovel.setImovel(imovel.get());
+			locacaoRepository.save(locacaoImovel);
+			return ResponseEntity.status(HttpStatus.CREATED).body(locacaoImovel);
+			
+		}
+		
+		return ResponseEntity.notFound().build();
+		
+	}
+
+
+	public List<LocacaoImovel> findAllByImovelId(Long imovelId) {
+
+		Optional<Imovel> imovel = imovelRepository.findById(imovelId);
+		
+		if (imovel.isPresent()) {
+		
+			return locacaoRepository.findByImovel(imovel.get());
+		
+		}
+		
+		return null;
+		
+		
+	}
+	
 	
 }

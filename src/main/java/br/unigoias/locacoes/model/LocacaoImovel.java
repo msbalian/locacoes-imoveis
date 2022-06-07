@@ -19,21 +19,22 @@ public class LocacaoImovel {
 	
 	private Double valorPorDiaria;
 	
-	@OneToOne(mappedBy = "locacaoImovel", optional = true)
-	private Cobranca cobranca;
-	
 	@ManyToOne
 	@JoinColumn(name = "imovel_id")
 	private Imovel imovel;
+
+	@OneToOne(mappedBy = "locacaoImovel", optional = true)
+	private Cobranca cobranca;
 	
 	public LocacaoImovel() {
 	}
+	
 
 	public LocacaoImovel(Long id, Integer quantidadeDiarias, Double valorPorDiaria, Imovel imovel) {
 		this.id = id;
 		this.quantidadeDiarias = quantidadeDiarias;
-		this.imovel = imovel;
 		this.valorPorDiaria = valorPorDiaria;
+		this.imovel = imovel;
 	}
 
 	public Long getId() {
@@ -55,11 +56,11 @@ public class LocacaoImovel {
 	public Double getValorPorDiaria() {
 		return valorPorDiaria;
 	}
-	
+
 	public void setValorPorDiaria(Double valorPorDiaria) {
 		this.valorPorDiaria = valorPorDiaria;
 	}
-	
+
 	public Imovel getImovel() {
 		return imovel;
 	}
@@ -75,6 +76,7 @@ public class LocacaoImovel {
 	public void setCobranca(Cobranca cobranca) {
 		this.cobranca = cobranca;
 	}
-
+	
+	
 	
 }

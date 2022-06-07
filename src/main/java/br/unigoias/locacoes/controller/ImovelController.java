@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.unigoias.locacoes.model.Imovel;
 import br.unigoias.locacoes.model.LocacaoImovel;
-import br.unigoias.locacoes.model.dto.ImovelDTO;
-import br.unigoias.locacoes.model.dto.LocacaoImovelDTO;
 import br.unigoias.locacoes.service.ImovelService;
-import br.unigoias.locacoes.service.LocacaoImovelService;
 
 @RestController
 @RequestMapping("/imoveis")
@@ -27,42 +24,40 @@ public class ImovelController {
 	@Autowired
 	private ImovelService imovelService;
 	
-	@Autowired
-	private LocacaoImovelService locacaoService; 
 	
 	@GetMapping
-	public List<ImovelDTO> findAll() {
+	public List<Imovel> findAll() {
 		return imovelService.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ImovelDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<Imovel> findById(@PathVariable Long id) {
 		return imovelService.findById(id);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ImovelDTO> deleteById(@PathVariable Long id) {
+	public ResponseEntity<Imovel> deleteById(@PathVariable Long id) {
 		return imovelService.deleteById(id);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ImovelDTO> updateById(@PathVariable Long id, @RequestBody Imovel novoImovel) {
+	public ResponseEntity<Imovel> updateById(@PathVariable Long id, @RequestBody Imovel novoImovel) {
 		return imovelService.updateById(id, novoImovel);
 	}
 
 	@PostMapping
-	public ImovelDTO save(@RequestBody ImovelDTO imovelDTO) {
-		return imovelService.save(imovelDTO);
+	public ResponseEntity<Imovel> save(@RequestBody Imovel imovel) {
+		return imovelService.save(imovel);
+	}
+
+	@PostMapping("{imovelId}/locacoes")
+	public ResponseEntity<LocacaoImovel> saveByImovelId(@PathVariable Long imovelId, @RequestBody LocacaoImovel locacaoImovel) {
+		return imovelService.saveByImovelId(imovelId, locacaoImovel);
 	}
 	
-	@GetMapping("/{imovelId}/locacoes")
-	public List<LocacaoImovelDTO> findByImovelId(@PathVariable Long imovelId) {
-		return locacaoService.findByImovelId(imovelId);
+	@GetMapping("{imovelId}/locacoes")
+	public List<LocacaoImovel> findAllByImovelId(@PathVariable Long imovelId) {
+		return imovelService.findAllByImovelId(imovelId);
 	}
 	
-	@PostMapping("/{imovelId}/locacoes")
-	public LocacaoImovelDTO save(@PathVariable Long imovelId, @RequestBody LocacaoImovelDTO locacaoImovelDTO) {
-		return locacaoService.save(imovelId, locacaoImovelDTO);
-	}	
-		
 }

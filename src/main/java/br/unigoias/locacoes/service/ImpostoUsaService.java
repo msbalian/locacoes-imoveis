@@ -1,11 +1,11 @@
 package br.unigoias.locacoes.service;
 
-public class ImpostoUsaService implements ImpostoService{
+public class ImpostoUsaService implements ImpostoService {
 
 	@Override
-	public Double calcularImposto(Double baseDeCalculo) {
-		
-		return baseDeCalculo*0.1;
+	public double calcularImposto(double baseDeCalculo) {
+
+		return baseDeCalculo*0.30;
 		
 	}
 

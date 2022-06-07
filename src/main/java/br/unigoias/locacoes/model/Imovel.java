@@ -22,8 +22,7 @@ public class Imovel {
 
 	@OneToMany(mappedBy = "imovel")
 	@JsonIgnore
-	private Set<LocacaoImovel> locacoes = new HashSet<LocacaoImovel>();
-	
+	private Set<LocacaoImovel> locacoes = new HashSet<>(); 
 	
 	public Imovel() {
 	}
@@ -47,14 +46,6 @@ public class Imovel {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-	
-	public Set<LocacaoImovel> getLocacoes() {
-		return locacoes;
-	}
-	
-	public void setLocacoes(Set<LocacaoImovel> locacoes) {
-		this.locacoes = locacoes;
 	}
 	
 	

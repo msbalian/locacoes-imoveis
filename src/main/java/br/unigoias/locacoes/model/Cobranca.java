@@ -18,11 +18,11 @@ public class Cobranca {
 	
 	private Double valorImposto;
 	
+	private Double valorPagamento;
+	
 	@OneToOne
 	@JoinColumn(name = "locacao_imovel_id")
 	private LocacaoImovel locacaoImovel;
-	
-	private Double valorPagamento;
 	
 	public Cobranca() {
 	}
@@ -30,11 +30,11 @@ public class Cobranca {
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public Double getValorPrincipal() {
 		return valorPrincipal;
 	}
@@ -51,20 +51,22 @@ public class Cobranca {
 		this.valorImposto = valorImposto;
 	}
 
-	public LocacaoImovel getLocacaoImovel() {
-		return locacaoImovel;
-	}
-	
-	public void setLocacaoImovel(LocacaoImovel locacaoImovel) {
-		this.locacaoImovel = locacaoImovel;
-	}
-
 	public Double getValorPagamento() {
 		return valorPagamento;
 	}
-	
+
 	public void setValorPagamento(Double valorPagamento) {
 		this.valorPagamento = valorPagamento;
 	}
+
+	public LocacaoImovel getLocacaoImovel() {
+		return locacaoImovel;
+	}
+
+	public void setLocacaoImovel(LocacaoImovel locacaoImovel) {
+		this.locacaoImovel = locacaoImovel;
+	}
+	
+	
 	
 }

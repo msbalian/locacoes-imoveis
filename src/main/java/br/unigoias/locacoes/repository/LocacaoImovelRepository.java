@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import br.unigoias.locacoes.model.Imovel;
 import br.unigoias.locacoes.model.LocacaoImovel;
 
-
 @Repository
 public interface LocacaoImovelRepository extends JpaRepository<LocacaoImovel, Long>{
 
