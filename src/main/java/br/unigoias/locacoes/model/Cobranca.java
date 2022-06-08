@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Cobranca {
 
@@ -22,6 +24,7 @@ public class Cobranca {
 	
 	@OneToOne
 	@JoinColumn(name = "locacao_imovel_id")
+	@JsonIgnore
 	private LocacaoImovel locacaoImovel;
 	
 	public Cobranca() {
